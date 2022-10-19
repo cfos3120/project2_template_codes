@@ -7,7 +7,7 @@ You can change any parts of this code
 '''
 import torch
 import torch.nn as nn
-from torchvision.utils import _log_api_usage_once
+#from torchvision.utils import _log_api_usage_once
 from collections import OrderedDict
 from functools import partial
 import math
@@ -193,7 +193,7 @@ class Network(nn.Module):
         conv_stem_configs = None,
     ):
         super().__init__()
-        _log_api_usage_once(self)
+        #_log_api_usage_once(self)
         torch._assert(image_size % patch_size == 0, "Input shape indivisible by patch size!")
         self.image_size = image_size
         self.patch_size = patch_size
