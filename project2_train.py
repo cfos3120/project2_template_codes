@@ -121,7 +121,7 @@ if __name__ == '__main__':
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     image_path = '/project/MLFluids/5307Project2'
-    image_path = r'Z:\PRJ-MLFluids\elec\5307Project2'
+    #image_path = r'Z:\PRJ-MLFluids\elec\5307Project2'
     imageset = ImageFolder(image_path, train_transform)
 
     imageset_length = len(imageset)
