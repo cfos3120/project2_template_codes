@@ -119,22 +119,31 @@ train_transform = transforms.Compose([
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
-train_image_path = '../train/' 
-validation_image_path = '../validation/' 
+image_path = '/project/MLFluids/5307Project2'
 
-# trainset = ImageFolder(train_image_path, train_transform)
-# valset = ImageFolder(validation_image_path, train_transform)
+imageset = ImageFolder(image_path, train_transform)
+
+imageset_length = len(imageset)
+imageset_i = list(range(imageset_length))
+
+split_i = int(torch.floor(0.2 * imageset_length))
+
+training_i, validation_i = imageset_i[split_i:], imageset_i[:split_i]
+
+train_sampler = torch.utils.data.SubsetRandomSampler(training_i)
+val_sampler = torch.utils.data.SubsetRandomSampler(validation_i)
+
 
 # DELETE THIS later when you have the full dataset
-trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
-                                        download=True, transform=train_transform)
-valset = torchvision.datasets.CIFAR10(root='./data', train=False,
-                                        download=True, transform=train_transform)
+# trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
+#                                         download=True, transform=train_transform)
+# valset = torchvision.datasets.CIFAR10(root='./data', train=False,
+#                                         download=True, transform=train_transform)
 
-trainloader = torch.utils.data.DataLoader(trainset, batch_size=4,
-                                         shuffle=True, num_workers=2)
-valloader = torch.utils.data.DataLoader(valset, batch_size=4,
-                                         shuffle=True, num_workers=2)
+trainloader = torch.utils.data.DataLoader(imageset, batch_size=4,
+                                         shuffle=True, num_workers=2, sampler = train_sampler)
+valloader = torch.utils.data.DataLoader(imageset, batch_size=4,
+                                         shuffle=True, num_workers=2, sampler = val_sampler)
 ####################################
 
 # ==================================
