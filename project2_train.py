@@ -59,6 +59,7 @@ def train_net(net, trainloader, valloader):
         for iter, data in enumerate(trainloader,0):
             # get the inputs
             inputs, labels = data
+            inputs, labels = inputs.to(device), labels.to(device)
 
             # zero the parameter gradients
             optimizer.zero_grad()
