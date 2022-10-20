@@ -49,6 +49,7 @@ def train_net(net, trainloader, valloader):
 
 
     # Initialise lists for storing statistics
+    global device
     val_accuracy = 0
     train_loss_list = list()
     val_acc_list = list()
@@ -57,7 +58,7 @@ def train_net(net, trainloader, valloader):
 
         for iter, data in enumerate(trainloader,0):
             # get the inputs
-            inputs, labels = data
+            inputs, labels = data.to(device)
 
             # zero the parameter gradients
             optimizer.zero_grad()
@@ -90,7 +91,9 @@ def train_net(net, trainloader, valloader):
 
         # print epoch output stat
         print('Training Loss {:.4f} and Validation Accuracy {:.2f}'.format(loss.item(),accuracy))
-
+        
+        # save model
+        torch.save(net.state_dict(), 'model.pth')
     return val_accuracy
 
 ##############################################
@@ -129,9 +132,9 @@ valset = torchvision.datasets.CIFAR10(root='./data', train=False,
                                         download=True, transform=train_transform)
 
 trainloader = torch.utils.data.DataLoader(trainset, batch_size=4,
-                                         shuffle=True, num_workers=2).to(device)
+                                         shuffle=True, num_workers=2)
 valloader = torch.utils.data.DataLoader(valset, batch_size=4,
-                                         shuffle=True, num_workers=2).to(device)
+                                         shuffle=True, num_workers=2)
 ####################################
 
 # ==================================
