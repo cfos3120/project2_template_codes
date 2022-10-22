@@ -164,7 +164,7 @@ if __name__ == '__main__':
 
     # remove this for later.
     #network = torchvision.models.vit_b_16(weights='IMAGENET1K_V1')
-    network.load_state_dict(torch.load('/rds/PRJ-MLFluids/elec/model_v13.pth'))
+    network.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
     
     network.to(device)
     # if args.cuda:
