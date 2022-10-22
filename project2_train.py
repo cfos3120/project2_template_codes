@@ -50,7 +50,6 @@ def train_net(net, trainloader, valloader):
 
     # Initialise lists for storing statistics
     global device
-    val_accuracy = 0
     train_loss_list = list()
     val_acc_list = list()
     # val_accuracy is the validation accuracy of each epoch. You can save your model base on the best validation accuracy.
@@ -70,32 +69,34 @@ def train_net(net, trainloader, valloader):
             loss.backward()
             optimizer.step()
 
-            if iter % 2000 == 1999:    # print every 2000 mini-batches
-                print('Epoch {}, Iter {}, Loss {:.2f}'.format(epoch, iter, loss))
+            if iter % 100 == 99:    # print every 2000 mini-batches
         
-        # store loss log
-        train_loss_list.append(loss.item())
+                # store loss log
+                train_loss_list.append(loss.item())
 
-        correct = 0
-        total = 0
-        with torch.no_grad():
-            for data in valloader:
-                images, labels = data
-                images, labels = images.to(device), labels.to(device)
-                outputs = net(images)
-                _, predicted = torch.max(outputs.data, 1)
-                total += labels.size(0)
-                correct += (predicted == labels).sum().item()
-        
-        # store loss log
-        accuracy = correct / total
-        val_acc_list.append(accuracy)
+                correct = 0
+                total = 0
+                with torch.no_grad():
+                    for data in valloader:
+                        images, labels = data
+                        images, labels = images.to(device), labels.to(device)
+                        outputs = net(images)
+                        _, predicted = torch.max(outputs.data, 1)
+                        total += labels.size(0)
+                        correct += (predicted == labels).sum().item()
+                
+                # store loss log
+                val_accuracy = correct / total
+                val_acc_list.append(val_accuracy)
 
-        # print epoch output stat
-        print('Training Loss {:.4f} and Validation Accuracy {:.2f}'.format(loss.item(),accuracy))
-        
+                # print epoch output stat
+                print('Epoch {} Iter {} Training Loss {:.4f} and Validation Accuracy {:.2f}'.format(epoch, iter, loss.item(),val_accuracy))
+                
         # save model
         torch.save(net.state_dict(), 'model.pth')
+
+        val_acc_list.dump("val_acc_list.dat")
+        train_loss_list.dump("train_loss_list.dat")
     return val_accuracy
 
 ##############################################
@@ -170,5 +171,11 @@ if __name__ == '__main__':
     val_acc = train_net(network, trainloader, valloader)
 
     print("final validation accuracy:", val_acc)
+
+    # dataiter = iter(trainloader)
+    # images, labels = dataiter.next()
+
+    # print(images.shape, labels.shape)
+    # print(labels)
 
     # ==================================
