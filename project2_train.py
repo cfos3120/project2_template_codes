@@ -43,7 +43,7 @@ def train_net(net, trainloader, valloader):
 ########## ToDo: Your codes goes below #######
     
     # Training Settings
-    epochs = 1
+    epochs = 4
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
