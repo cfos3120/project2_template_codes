@@ -162,6 +162,9 @@ if __name__ == '__main__':
             mlp_dim=3072
         )
 
+    # remove this for later.
+    network = torchvision.models.vit_b_16(weights='IMAGENET1K_V1')
+    
     network.to(device)
     # if args.cuda:
     #     network = network.cuda()
