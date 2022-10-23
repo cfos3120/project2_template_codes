@@ -32,6 +32,7 @@ from torchvision.datasets import ImageFolder
 
 from network import Network # the network you used
 
+import numpy as np
 # parser = argparse.ArgumentParser(description= \
 #                                      'scipt for training of project 2')
 # parser.add_argument('--cuda', action='store_true', default=False,
@@ -50,8 +51,8 @@ def train_net(net, trainloader, valloader):
 
     # Initialise lists for storing statistics
     global device
-    train_loss_list = list()
-    val_acc_list = list()
+    train_loss_list = list([])
+    val_acc_list = list([])
     # val_accuracy is the validation accuracy of each epoch. You can save your model base on the best validation accuracy.
     for epoch in range(epochs):
 
