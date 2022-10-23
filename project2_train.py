@@ -93,14 +93,14 @@ def train_net(net, trainloader, valloader):
                 # print epoch output stat
                 print('Epoch {} Iter {} Training Loss {:.4f} and Validation Accuracy {:.2f}'.format(epoch, iter, loss.item(),val_accuracy))
                 
-        # save model
-        torch.save(net.state_dict(), 'model.pth')
-        
-        val_acc_list = np.asarray(val_acc_list)
-        train_loss_list = np.asarray(train_loss_list)
+    # save model
+    torch.save(net.state_dict(), 'model.pth')
+    
+    val_acc_list = np.asarray(val_acc_list)
+    train_loss_list = np.asarray(train_loss_list)
 
-        val_acc_list.dump("val_acc_list.dat")
-        train_loss_list.dump("train_loss_list.dat")
+    val_acc_list.dump("val_acc_list.dat")
+    train_loss_list.dump("train_loss_list.dat")
     return val_accuracy
 
 ##############################################
