@@ -95,6 +95,9 @@ def train_net(net, trainloader, valloader):
                 
         # save model
         torch.save(net.state_dict(), 'model.pth')
+        
+        val_acc_list = np.asarray(val_acc_list)
+        train_loss_list = np.asarray(train_loss_list)
 
         val_acc_list.dump("val_acc_list.dat")
         train_loss_list.dump("train_loss_list.dat")
