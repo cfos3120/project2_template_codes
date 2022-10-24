@@ -93,11 +93,11 @@ if __name__ == '__main__':
     model = torchvision.models.resnet50(pretrained=True)
     model.to(device)
     loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3)
+    optimizer = torch.optim.SGD(model.parameters(), lr=5e-4, momentum=0.9)
     
     
     # TRAINING
-    epochs = 5
+    epochs = 16
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
         train(trainloader, model, loss_fn, optimizer)
