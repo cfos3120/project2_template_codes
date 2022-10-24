@@ -183,6 +183,7 @@ if __name__ == '__main__':
     print("final validation accuracy:", val_acc)
 
     network2 = torchvision.models.resnet34()
+    network2.to(device)
     val_acc = train_net(network2, trainloader, valloader)
 
     print("final validation accuracy:", val_acc)
