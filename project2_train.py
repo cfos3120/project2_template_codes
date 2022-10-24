@@ -111,6 +111,7 @@ if __name__ == '__main__':
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     image_path = '/project/MLFluids/5307Project2'
+    #image_path = r'C:\Users\Noahc\Documents\USYD\PHD\9 - Courses\ELEC5307\Assignment 2\5307Project2'
     
     imageset = ImageFolder(image_path, train_transform)
 
@@ -148,6 +149,13 @@ if __name__ == '__main__':
             mlp_dim=3072
         )
 
+    first_batch = next(iter(trainloader))
+    print(f'the type of this object is {type(first_batch)}') 
+    print(f'the length of this tuple is {len(first_batch)}')  
+    print(f'the type of the first item in the tuple is {type(first_batch[0])}')  # Tensor!
+    print(f'the shape of the first item (image tensors) is {first_batch[0].shape}')  # The size of image tensors in this batch!
+    print(f'the second item in the tuple is {first_batch[1]}')  # The labels
+    
     # remove this for later.
     #network = torchvision.models.vit_b_16(weights='IMAGENET1K_V1')
     #network.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
@@ -162,9 +170,9 @@ if __name__ == '__main__':
 
     #print("final validation accuracy:", val_acc)
 
-    network2 = torchvision.models.resnet50(pretrained=True)
-    network2.to(device)
-    val_acc = train_net(network2, trainloader, valloader)
+    # network2 = torchvision.models.resnet50(pretrained=True)
+    # network2.to(device)
+    # val_acc = train_net(network2, trainloader, valloader)
 
-    print("final validation accuracy:", val_acc)
+    # print("final validation accuracy:", val_acc)
     # ==================================
