@@ -97,7 +97,7 @@ if __name__ == '__main__':
     
     
     # TRAINING
-    epochs = 16
+    epochs = 100
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
         train(trainloader, model, loss_fn, optimizer)
