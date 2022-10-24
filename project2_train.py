@@ -44,9 +44,9 @@ def train_net(net, trainloader, valloader):
 ########## ToDo: Your codes goes below #######
     
     # Training Settings
-    epochs = 4
+    epochs = 16
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
+    optimizer = torch.optim.SGD(net.parameters(), lr=0.0005, momentum=0.9)
 
 
     # Initialise lists for storing statistics
@@ -114,9 +114,11 @@ if __name__ == '__main__':
 
     train_transform = transforms.Compose([
         #transforms.RandomCrop(224),
-        transforms.Resize(224),
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
         transforms.ToTensor(), 
-        transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
+        transforms.Normalize((0.485, 0.456, 0.406), (0.229, 0.224, 0.225))
+        #transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
     ])
 
     ####################################
@@ -177,6 +179,11 @@ if __name__ == '__main__':
     # train and eval your trained network
     # you have to define your own 
     val_acc = train_net(network, trainloader, valloader)
+
+    print("final validation accuracy:", val_acc)
+
+    network2 = torchvision.models.resnet34()
+    val_acc = train_net(network2, trainloader, valloader)
 
     print("final validation accuracy:", val_acc)
 
