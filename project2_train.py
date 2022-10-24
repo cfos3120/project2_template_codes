@@ -33,29 +33,22 @@ from torchvision.datasets import ImageFolder
 from network import Network # the network you used
 
 import numpy as np
-# parser = argparse.ArgumentParser(description= \
-#                                      'scipt for training of project 2')
-# parser.add_argument('--cuda', action='store_true', default=False,
-#                     help='Used when there are cuda installed.')
-# args = parser.parse_args()
 
 # training process. 
 def train_net(net, trainloader, valloader):
-########## ToDo: Your codes goes below #######
     
     # Training Settings
     epochs = 32
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.0005, momentum=0.9)
 
-
     # Initialise lists for storing statistics
     global device
     train_loss_list = list([])
     val_acc_list = list([])
+
     # val_accuracy is the validation accuracy of each epoch. You can save your model base on the best validation accuracy.
     for epoch in range(epochs):
-
         for iter, data in enumerate(trainloader,0):
             # get the inputs
             inputs, labels = data
@@ -73,6 +66,7 @@ def train_net(net, trainloader, valloader):
         train_loss_list.append(loss.item())
         print('Epoch {} Iter {} Training Loss {:.4f}'.format(epoch, iter, loss.item()))
         
+    # calculate validation
     correct = 0
     total = 0
     with torch.no_grad():
@@ -84,25 +78,22 @@ def train_net(net, trainloader, valloader):
             total += labels.size(0)
             correct += (predicted == labels).sum().item()     
     
+    # validation accuracy
     val_accuracy = correct/total
     
     # save model
     torch.save(net.state_dict(), 'model.pth')
     
-    #val_acc_list = np.asarray(val_acc_list)
+    # dump losses log
     train_loss_list = np.asarray(train_loss_list)
-
-    #val_acc_list.dump("val_acc_list.dat")
     train_loss_list.dump("train_loss_list.dat")
+
     return val_accuracy
 
 ##############################################
 
 ############################################
 # Transformation definition
-# NOTE:
-# Write the train_transform here. We recommend you use
-# Normalization, RandomCrop and any other transform you think is useful.
 if __name__ == '__main__':
 
     train_transform = transforms.Compose([
@@ -114,16 +105,13 @@ if __name__ == '__main__':
         #transforms.Normalize((0.5, 0.5, 0.5), (0.5, 0.5, 0.5))
     ])
 
-    ####################################
-
-    ####################################
     # Define the training dataset and dataloader.
     # You can make some modifications, e.g. batch_size, adding other hyperparameters, etc.
 
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     image_path = '/project/MLFluids/5307Project2'
-    #image_path = r'Z:\PRJ-MLFluids\elec\5307Project2'
+    
     imageset = ImageFolder(image_path, train_transform)
 
     imageset_length = len(imageset)
@@ -150,7 +138,6 @@ if __name__ == '__main__':
     ####################################
 
     # ==================================
-    # use cuda if called with '--cuda'.
 
     network = Network(
             image_size=224,
@@ -175,16 +162,9 @@ if __name__ == '__main__':
 
     #print("final validation accuracy:", val_acc)
 
-    network2 = torchvision.models.resnet50(weights="IMAGENET1K_V1")
+    network2 = torchvision.models.resnet50(pretrained=True)
     network2.to(device)
     val_acc = train_net(network2, trainloader, valloader)
 
     print("final validation accuracy:", val_acc)
-
-    # dataiter = iter(trainloader)
-    # images, labels = dataiter.next()
-
-    # print(images.shape, labels.shape)
-    # print(labels)
-
     # ==================================
