@@ -44,7 +44,7 @@ def train_net(net, trainloader, valloader):
 ########## ToDo: Your codes goes below #######
     
     # Training Settings
-    epochs = 16
+    epochs = 32
     criterion = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(net.parameters(), lr=0.0005, momentum=0.9)
 
@@ -70,36 +70,29 @@ def train_net(net, trainloader, valloader):
             loss.backward()
             optimizer.step()
 
-            if iter % 100 == 99:    # print every 2000 mini-batches
+        train_loss_list.append(loss.item())
+        print('Epoch {} Iter {} Training Loss {:.4f}'.format(epoch, iter, loss.item()))
         
-                # store loss log
-                train_loss_list.append(loss.item())
-
-                correct = 0
-                total = 0
-                with torch.no_grad():
-                    for data in valloader:
-                        images, labels = data
-                        images, labels = images.to(device), labels.to(device)
-                        outputs = net(images)
-                        _, predicted = torch.max(outputs.data, 1)
-                        total += labels.size(0)
-                        correct += (predicted == labels).sum().item()
-                
-                # store loss log
-                val_accuracy = correct / total
-                val_acc_list.append(val_accuracy)
-
-                # print epoch output stat
-                print('Epoch {} Iter {} Training Loss {:.4f} and Validation Accuracy {:.2f}'.format(epoch, iter, loss.item(),val_accuracy))
-                
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for data in valloader:
+            images, labels = data
+            images, labels = images.to(device), labels.to(device)
+            outputs = net(images)
+            _, predicted = torch.max(outputs.data, 1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()     
+    
+    val_accuracy = correct/total
+    
     # save model
     torch.save(net.state_dict(), 'model.pth')
     
-    val_acc_list = np.asarray(val_acc_list)
+    #val_acc_list = np.asarray(val_acc_list)
     train_loss_list = np.asarray(train_loss_list)
 
-    val_acc_list.dump("val_acc_list.dat")
+    #val_acc_list.dump("val_acc_list.dat")
     train_loss_list.dump("train_loss_list.dat")
     return val_accuracy
 
@@ -170,19 +163,19 @@ if __name__ == '__main__':
 
     # remove this for later.
     #network = torchvision.models.vit_b_16(weights='IMAGENET1K_V1')
-    network.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
+    #network.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
     
-    network.to(device)
+    #network.to(device)
     # if args.cuda:
     #     network = network.cuda()
 
     # train and eval your trained network
     # you have to define your own 
-    val_acc = train_net(network, trainloader, valloader)
+    #val_acc = train_net(network, trainloader, valloader)
 
-    print("final validation accuracy:", val_acc)
+    #print("final validation accuracy:", val_acc)
 
-    network2 = torchvision.models.resnet34()
+    network2 = torchvision.models.resnet50(weights="IMAGENET1K_V1")
     network2.to(device)
     val_acc = train_net(network2, trainloader, valloader)
 
