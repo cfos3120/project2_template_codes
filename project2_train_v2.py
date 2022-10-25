@@ -64,39 +64,30 @@ if __name__ == '__main__':
     image_path = '/project/MLFluids/5307Project2' #r'C:\Users\Noahc\Documents\USYD\PHD\9 - Courses\ELEC5307\Assignment 2\5307Project2'
     
     imageset = ImageFolder(image_path, train_transform)
-    imageset_length = len(imageset)
-    imageset_i = list(range(imageset_length))
-    split_i = int(0.2 * imageset_length)
-    training_i, validation_i = imageset_i[split_i:], imageset_i[:split_i]
+    train_count = int(0.7 * len(imageset))
+    valid_count = int(len(imageset) - train_count)
+    train_dataset, valid_dataset = torch.utils.data.random_split(imageset, (train_count, valid_count))
 
-    train_sampler = torch.utils.data.SubsetRandomSampler(training_i)
-    val_sampler = torch.utils.data.SubsetRandomSampler(validation_i)
-
-    trainloader = torch.utils.data.DataLoader(imageset, batch_size=4,
-                                            shuffle=False, num_workers=2, sampler = train_sampler)
-    valloader = torch.utils.data.DataLoader(imageset, batch_size=4,
-                                            shuffle=False, num_workers=2, sampler = val_sampler)
+    trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=4,
+                                            shuffle=True, num_workers=2)
+    valloader = torch.utils.data.DataLoader(valid_dataset, batch_size=4,
+                                            shuffle=True, num_workers=2)
 
     # CIFAR10 Dataset for comparison
-    trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
-                                            download=True, transform=train_transform)
-    valset = torchvision.datasets.CIFAR10(root='./data', train=False,
-                                            download=True, transform=train_transform)
-    
-    trainloader2 = torch.utils.data.DataLoader(imageset, batch_size=4,
-                                            shuffle=False, num_workers=2, sampler = train_sampler)
-    valloader2 = torch.utils.data.DataLoader(imageset, batch_size=4,
-                                            shuffle=False, num_workers=2, sampler = val_sampler)
+    # trainset = torchvision.datasets.CIFAR10(root='./data', train=True,
+    #                                         download=True, transform=train_transform)
+    # valset = torchvision.datasets.CIFAR10(root='./data', train=False,
+    #                                         download=True, transform=train_transform)
     
     # MODEL INITIALISATION 
     model = torchvision.models.alexnet(pretrained=True)
     model.to(device)
     loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=5e-4, momentum=0.9)
+    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
     
     
     # TRAINING
-    epochs = 100
+    epochs = 16
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
         train(trainloader, model, loss_fn, optimizer, device)
@@ -104,11 +95,3 @@ if __name__ == '__main__':
     print("Fruits Done!")
 
     torch.save(model.state_dict(), 'project2_v2_fruit.pth')
-
-    model = torchvision.models.alexnet(pretrained=True)
-    model.to(device)
-    for t in range(epochs):
-        print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader2, model, loss_fn, optimizer,device)
-        test(valloader2, model, loss_fn, device)
-    print("CIFAR10 Done!")
