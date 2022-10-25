@@ -16,8 +16,7 @@ from network import Network # the network you used
 
 import numpy as np
 
-def train(dataloader, model, loss_fn, optimizer):
-    global device
+def train(dataloader, model, loss_fn, optimizer, device):
     size = len(dataloader.dataset)
     model.train()
     for batch, (X, y) in enumerate(dataloader):
@@ -34,9 +33,9 @@ def train(dataloader, model, loss_fn, optimizer):
 
         if batch % 100 == 0:
             loss, current = loss.item(), batch * len(X)
+            print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 
-def test(dataloader, model, loss_fn):
-    global device
+def test(dataloader, model, loss_fn, device):
     size = len(dataloader.dataset)
     num_batches = len(dataloader)
     model.eval()
@@ -100,8 +99,8 @@ if __name__ == '__main__':
     epochs = 100
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer)
-        test(valloader, model, loss_fn)
+        train(trainloader, model, loss_fn, optimizer, device)
+        test(valloader, model, loss_fn, device)
     print("Fruits Done!")
 
     torch.save(model.state_dict(), 'project2_v2_fruit.pth')
@@ -110,6 +109,6 @@ if __name__ == '__main__':
     model.to(device)
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader2, model, loss_fn, optimizer)
-        test(valloader2, model, loss_fn)
+        train(trainloader2, model, loss_fn, optimizer,device)
+        test(valloader2, model, loss_fn, device)
     print("CIFAR10 Done!")
