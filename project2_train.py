@@ -38,9 +38,9 @@ import numpy as np
 def train_net(net, trainloader, valloader):
     
     # Training Settings
-    epochs = 32
+    epochs = 500
     criterion = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(net.parameters(), lr=0.0005, momentum=0.9)
+    optimizer = torch.optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
     # Initialise lists for storing statistics
     global device

@@ -90,7 +90,7 @@ if __name__ == '__main__':
                                             shuffle=False, num_workers=2, sampler = val_sampler)
     
     # MODEL INITIALISATION 
-    model = torchvision.models.resnet50(pretrained=True)
+    model = torchvision.models.alexnet(pretrained=True)
     model.to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=5e-4, momentum=0.9)
@@ -104,6 +104,10 @@ if __name__ == '__main__':
         test(valloader, model, loss_fn)
     print("Fruits Done!")
 
+    torch.save(model.state_dict(), 'project2_v2_fruit.pth')
+
+    model = torchvision.models.alexnet(pretrained=True)
+    model.to(device)
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
         train(trainloader2, model, loss_fn, optimizer)
