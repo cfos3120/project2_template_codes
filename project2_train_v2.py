@@ -79,19 +79,103 @@ if __name__ == '__main__':
     # valset = torchvision.datasets.CIFAR10(root='./data', train=False,
     #                                         download=True, transform=train_transform)
     
-    # MODEL INITIALISATION 
+    epochs = 16 
+
+    # TRAINING ALEXNET
     model = torchvision.models.alexnet(pretrained=True)
     model.to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
     
-    
-    # TRAINING
-    epochs = 16
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
         train(trainloader, model, loss_fn, optimizer, device)
         test(valloader, model, loss_fn, device)
     print("Fruits Done!")
 
-    torch.save(model.state_dict(), 'project2_v2_fruit.pth')
+    torch.save(model.state_dict(), 'project2_alexnet_pre_train.pth')
+
+    # TRAINING ALEXNET
+    model = torchvision.models.alexnet(pretrained=False)
+    model.to(device)
+    loss_fn = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+    
+    for t in range(epochs):
+        print(f"Epoch {t+1}\n-------------------------------")
+        train(trainloader, model, loss_fn, optimizer, device)
+        test(valloader, model, loss_fn, device)
+    print("Fruits Done!")
+
+    torch.save(model.state_dict(), 'project2_alexnet.pth')
+
+    # TRAINING TRANSFORMER PRETRAIN
+    model = Network(
+        image_size=224,
+        patch_size=16,
+        num_layers=12,
+        num_heads=12,
+        hidden_dim=768,
+        mlp_dim=3072
+    )
+    model.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
+    model.to(device)
+    loss_fn = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+
+    for t in range(epochs):
+        print(f"Epoch {t+1}\n-------------------------------")
+        train(trainloader, model, loss_fn, optimizer, device)
+        test(valloader, model, loss_fn, device)
+    print("Fruits Done!")
+
+    torch.save(model.state_dict(), 'project2_transformer_pre_trained.pth')
+    
+    # TRAINING TRANSFORMER
+    model = Network(
+        image_size=224,
+        patch_size=16,
+        num_layers=12,
+        num_heads=12,
+        hidden_dim=768,
+        mlp_dim=3072
+    )
+    model.to(device)
+    loss_fn = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+
+    for t in range(epochs):
+        print(f"Epoch {t+1}\n-------------------------------")
+        train(trainloader, model, loss_fn, optimizer, device)
+        test(valloader, model, loss_fn, device)
+    print("Fruits Done!")
+
+    torch.save(model.state_dict(), 'project2_transformer.pth')
+
+    # TRAINING RESNET PRETRAIN
+    model = torchvision.models.resnet50(pretrained=True)
+    model.to(device)
+    loss_fn = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+    
+    for t in range(epochs):
+        print(f"Epoch {t+1}\n-------------------------------")
+        train(trainloader, model, loss_fn, optimizer, device)
+        test(valloader, model, loss_fn, device)
+    print("Fruits Done!")
+
+    torch.save(model.state_dict(), 'project2_resnet_pre_train.pth')
+
+    # TRAINING RESNET
+    model = torchvision.models.resnet50(pretrained=False)
+    model.to(device)
+    loss_fn = nn.CrossEntropyLoss()
+    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+    
+    for t in range(epochs):
+        print(f"Epoch {t+1}\n-------------------------------")
+        train(trainloader, model, loss_fn, optimizer, device)
+        test(valloader, model, loss_fn, device)
+    print("Fruits Done!")
+
+    torch.save(model.state_dict(), 'project2_resnet.pth')
