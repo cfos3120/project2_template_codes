@@ -12,7 +12,7 @@ import torchvision
 import torchvision.transforms as transforms
 from torchvision.datasets import ImageFolder
 
-from network import Network # the network you used
+from network import Network, MlpMixer, WarmupCosineLrScheduler # the network you used
 
 import numpy as np
 
@@ -51,6 +51,40 @@ def test(dataloader, model, loss_fn, device):
     correct /= size
     print(f"Test Error: \n Accuracy: {(100*correct):>0.1f}%, Avg loss: {test_loss:>8f} \n")
 
+def fruit_model_runner(trainloader, valloader, model, model_save_name, device, epoch=16, mixer=False):
+
+    # TRAINING ALEXNET
+    print('Starting Model Training: ', model_save_name)
+    model.to(device)
+
+    # set a scheduler:
+    if mixer:
+        optimizer = torch.optim.SGD(model.parameters(), 
+                                    lr=5e-4, 
+                                    weight_decay=1e-7,
+                                    momentum=0.9, 
+                                    nesterov=True)
+        scheduler = WarmupCosineLrScheduler(optimizer, 
+                                    epoch, 
+                                    warmup_iter=0
+                                    )
+    else:
+        optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+        scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
+                                                     milestones=[4, 8, 12],
+                                                     gamma=0.5)
+    
+    loss_fn = nn.CrossEntropyLoss()
+    
+    
+    for t in range(epochs):
+        print(f"Epoch {t+1}\n-------------------------------")
+        train(trainloader, model, loss_fn, optimizer, scheduler, device)
+        test(valloader, model, loss_fn, device)
+    print(model_save_name, " Done!")
+
+    torch.save(model.state_dict(), model_save_name)
+
 if __name__ == '__main__':
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -82,125 +116,50 @@ if __name__ == '__main__':
     
     epochs = 16 
 
-    # TRAINING ALEXNET
-    model = torchvision.models.alexnet(pretrained=True)
-    model.to(device)
-    loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
-    # set a scheduler:
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                     milestones=[4, 8, 12],
-                                                     gamma=0.5)
+    # # TRAINING ALEXNET
+    # model = torchvision.models.alexnet(pretrained=True)
+    # fruit_model_runner(trainloader,valloader, model, 'project2_alexnet_pre_train.pth', device, epoch=16)
+
+    # # TRAINING ALEXNET
+    # model = torchvision.models.alexnet(pretrained=False)
+    # fruit_model_runner(trainloader,valloader, model, 'project2_alexnet.pth', device, epoch=16)
+
+    # # TRAINING TRANSFORMER PRETRAIN
+    # model = Network(
+    #     image_size=224,
+    #     patch_size=16,
+    #     num_layers=12,
+    #     num_heads=12,
+    #     hidden_dim=768,
+    #     mlp_dim=3072
+    # )
+    # model.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
+    # fruit_model_runner(trainloader,valloader, model, 'project2_transformer_pre_trained.pth', device, epoch=16)
     
-    for t in range(epochs):
-        print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer, scheduler, device)
-        test(valloader, model, loss_fn, device)
-    print("Fruits Done!")
+    # # TRAINING TRANSFORMER
+    # model = Network(
+    #     image_size=224,
+    #     patch_size=16,
+    #     num_layers=12,
+    #     num_heads=12,
+    #     hidden_dim=768,
+    #     mlp_dim=3072
+    # )
+    # fruit_model_runner(trainloader,valloader, model, 'project2_transformer.pth', device, epoch=16)
 
-    torch.save(model.state_dict(), 'project2_alexnet_pre_train.pth')
+    # # TRAINING RESNET PRETRAIN
+    # model = torchvision.models.resnet50(pretrained=True)
+    # fruit_model_runner(trainloader,valloader, model, 'project2_resnet_pre_train.pth', device, epoch=16)
 
-    # TRAINING ALEXNET
-    model = torchvision.models.alexnet(pretrained=False)
-    model.to(device)
-    loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
-    # set a scheduler:
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                     milestones=[4, 8, 12],
-                                                     gamma=0.5)
-    
-    for t in range(epochs):
-        print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer, scheduler, device)
-        test(valloader, model, loss_fn, device)
-    print("Fruits Done!")
+    # # TRAINING RESNET
+    # model = torchvision.models.resnet50(pretrained=False)
+    # fruit_model_runner(trainloader,valloader, model, 'project2_resnet.pth', device, epoch=16)
 
-    torch.save(model.state_dict(), 'project2_alexnet.pth')
+    # TRAINING MLP-Mixer PRETRAIN
+    model = MlpMixer()
+    model.load_from(np.load('/project/MLFluids/imagenet21k_Mixer-B_16.npz'))
+    fruit_model_runner(trainloader,valloader, model, 'project2_MLPMixer_pre_train.pth', device, epoch=16, mixer=True)
 
-    # TRAINING TRANSFORMER PRETRAIN
-    model = Network(
-        image_size=224,
-        patch_size=16,
-        num_layers=12,
-        num_heads=12,
-        hidden_dim=768,
-        mlp_dim=3072
-    )
-    model.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
-    model.to(device)
-    loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
-    # set a scheduler:
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                     milestones=[4, 8, 12],
-                                                     gamma=0.5)
-
-    for t in range(epochs):
-        print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer, scheduler, device)
-        test(valloader, model, loss_fn, device)
-    print("Fruits Done!")
-
-    torch.save(model.state_dict(), 'project2_transformer_pre_trained.pth')
-    
-    # TRAINING TRANSFORMER
-    model = Network(
-        image_size=224,
-        patch_size=16,
-        num_layers=12,
-        num_heads=12,
-        hidden_dim=768,
-        mlp_dim=3072
-    )
-    model.to(device)
-    loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
-    # set a scheduler:
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                     milestones=[4, 8, 12],
-                                                     gamma=0.5)
-
-    for t in range(epochs):
-        print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer, scheduler, device)
-        test(valloader, model, loss_fn, device)
-    print("Fruits Done!")
-
-    torch.save(model.state_dict(), 'project2_transformer.pth')
-
-    # TRAINING RESNET PRETRAIN
-    model = torchvision.models.resnet50(pretrained=True)
-    model.to(device)
-    loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
-    # set a scheduler:
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                     milestones=[4, 8, 12],
-                                                     gamma=0.5)
-    
-    for t in range(epochs):
-        print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer, scheduler, device)
-        test(valloader, model, loss_fn, device)
-    print("Fruits Done!")
-
-    torch.save(model.state_dict(), 'project2_resnet_pre_train.pth')
-
-    # TRAINING RESNET
-    model = torchvision.models.resnet50(pretrained=False)
-    model.to(device)
-    loss_fn = nn.CrossEntropyLoss()
-    optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
-    # set a scheduler:
-    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                     milestones=[4, 8, 12],
-                                                     gamma=0.5)
-    
-    for t in range(epochs):
-        print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer, scheduler, device)
-        test(valloader, model, loss_fn, device)
-    print("Fruits Done!")
-
-    torch.save(model.state_dict(), 'project2_resnet.pth')
+    # TRAINING MLP-Mixer
+    model = MlpMixer()
+    fruit_model_runner(trainloader,valloader, model, 'project2_MLPMixer.pth', device, epoch=16, mixer=True)
