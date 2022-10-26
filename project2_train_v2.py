@@ -16,7 +16,7 @@ from network import Network # the network you used
 
 import numpy as np
 
-def train(dataloader, model, loss_fn, optimizer, device):
+def train(dataloader, model, loss_fn, optimizer, scheduler, device):
     size = len(dataloader.dataset)
     model.train()
     for batch, (X, y) in enumerate(dataloader):
@@ -34,6 +34,7 @@ def train(dataloader, model, loss_fn, optimizer, device):
         if batch % 100 == 0:
             loss, current = loss.item(), batch * len(X)
             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
+    scheduler.step()
 
 def test(dataloader, model, loss_fn, device):
     size = len(dataloader.dataset)
@@ -86,10 +87,14 @@ if __name__ == '__main__':
     model.to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+    # set a scheduler:
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
+                                                     milestones=[4, 8, 12],
+                                                     gamma=0.5)
     
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer, device)
+        train(trainloader, model, loss_fn, optimizer, scheduler, device)
         test(valloader, model, loss_fn, device)
     print("Fruits Done!")
 
@@ -100,10 +105,14 @@ if __name__ == '__main__':
     model.to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+    # set a scheduler:
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
+                                                     milestones=[4, 8, 12],
+                                                     gamma=0.5)
     
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer, device)
+        train(trainloader, model, loss_fn, optimizer, scheduler, device)
         test(valloader, model, loss_fn, device)
     print("Fruits Done!")
 
@@ -122,10 +131,14 @@ if __name__ == '__main__':
     model.to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+    # set a scheduler:
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
+                                                     milestones=[4, 8, 12],
+                                                     gamma=0.5)
 
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer, device)
+        train(trainloader, model, loss_fn, optimizer, scheduler, device)
         test(valloader, model, loss_fn, device)
     print("Fruits Done!")
 
@@ -143,10 +156,14 @@ if __name__ == '__main__':
     model.to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+    # set a scheduler:
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
+                                                     milestones=[4, 8, 12],
+                                                     gamma=0.5)
 
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer, device)
+        train(trainloader, model, loss_fn, optimizer, scheduler, device)
         test(valloader, model, loss_fn, device)
     print("Fruits Done!")
 
@@ -157,10 +174,14 @@ if __name__ == '__main__':
     model.to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+    # set a scheduler:
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
+                                                     milestones=[4, 8, 12],
+                                                     gamma=0.5)
     
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer, device)
+        train(trainloader, model, loss_fn, optimizer, scheduler, device)
         test(valloader, model, loss_fn, device)
     print("Fruits Done!")
 
@@ -171,10 +192,14 @@ if __name__ == '__main__':
     model.to(device)
     loss_fn = nn.CrossEntropyLoss()
     optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+    # set a scheduler:
+    scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
+                                                     milestones=[4, 8, 12],
+                                                     gamma=0.5)
     
     for t in range(epochs):
         print(f"Epoch {t+1}\n-------------------------------")
-        train(trainloader, model, loss_fn, optimizer, device)
+        train(trainloader, model, loss_fn, optimizer, scheduler, device)
         test(valloader, model, loss_fn, device)
     print("Fruits Done!")
 
