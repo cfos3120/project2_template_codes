@@ -69,9 +69,9 @@ def fruit_model_runner(trainloader, valloader, model, model_save_name, device, e
         #                             warmup_iter=0
         #                             )
     else:
-        optimizer = torch.optim.SGD(model.parameters(), lr=1e-3, momentum=0.9)
+        optimizer = torch.optim.SGD(model.parameters(), lr=1e-4, momentum=0.9)
     scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer,
-                                                     milestones=[4, 8, 12],
+                                                     milestones=[2, 4, 8],
                                                      gamma=0.5)
     
     loss_fn = nn.CrossEntropyLoss()
@@ -124,17 +124,17 @@ if __name__ == '__main__':
     # model = torchvision.models.alexnet(pretrained=False)
     # fruit_model_runner(trainloader,valloader, model, 'project2_alexnet.pth', device, epoch=16)
 
-    # # TRAINING TRANSFORMER PRETRAIN
-    # model = Network(
-    #     image_size=224,
-    #     patch_size=16,
-    #     num_layers=12,
-    #     num_heads=12,
-    #     hidden_dim=768,
-    #     mlp_dim=3072
-    # )
-    # model.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
-    # fruit_model_runner(trainloader,valloader, model, 'project2_transformer_pre_trained.pth', device, epoch=16)
+    # TRAINING TRANSFORMER PRETRAIN
+    model = Network(
+        image_size=224,
+        patch_size=16,
+        num_layers=12,
+        num_heads=12,
+        hidden_dim=768,
+        mlp_dim=3072
+    )
+    model.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
+    fruit_model_runner(trainloader,valloader, model, 'project2_transformer_pre_trained2.pth', device, epoch=16)
     
     # # TRAINING TRANSFORMER
     # model = Network(
@@ -156,10 +156,10 @@ if __name__ == '__main__':
     # fruit_model_runner(trainloader,valloader, model, 'project2_resnet.pth', device, epoch=16)
 
     # TRAINING MLP-Mixer PRETRAIN
-    model = MlpMixer()
-    model.load_from(np.load('/project/MLFluids/Mixer-B_16.npz'))
-    fruit_model_runner(trainloader,valloader, model, 'project2_MLPMixer_pre_train.pth', device, epoch=16, mixer=True)
+    # model = MlpMixer()
+    # model.load_from(np.load('/project/MLFluids/Mixer-B_16.npz'))
+    # fruit_model_runner(trainloader,valloader, model, 'project2_MLPMixer_pre_train.pth', device, epoch=16, mixer=True)
 
-    # TRAINING MLP-Mixer
-    model = MlpMixer()
-    fruit_model_runner(trainloader,valloader, model, 'project2_MLPMixer.pth', device, epoch=16, mixer=True)
+    # # TRAINING MLP-Mixer
+    # model = MlpMixer()
+    # fruit_model_runner(trainloader,valloader, model, 'project2_MLPMixer.pth', device, epoch=16, mixer=True)
