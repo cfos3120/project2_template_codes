@@ -157,7 +157,7 @@ if __name__ == '__main__':
 
     # TRAINING MLP-Mixer PRETRAIN
     model = MlpMixer()
-    model.load_from(np.load('/project/MLFluids/imagenet21k_Mixer-B_16.npz'))
+    model.load_from(np.load('/project/MLFluids/Mixer-B_16.npz'))
     fruit_model_runner(trainloader,valloader, model, 'project2_MLPMixer_pre_train.pth', device, epoch=16, mixer=True)
 
     # TRAINING MLP-Mixer
