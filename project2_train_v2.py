@@ -73,8 +73,9 @@ def fruit_model_runner(trainloader, valloader, model, model_save_name, device, l
     else:
         optimizer = torch.optim.SGD(model.parameters(), lr=lr, momentum=0.9)
     
-    if milestones != None & gamma != None:
+    if milestones != None and gamma != None:
         scheduler = torch.optim.lr_scheduler.MultiStepLR(optimizer, milestones=milestones, gamma=gamma)
+    else: scheduler = None
     
     loss_fn = nn.CrossEntropyLoss()
     
