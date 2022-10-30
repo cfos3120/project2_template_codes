@@ -132,16 +132,16 @@ if __name__ == '__main__':
     # fruit_model_runner(trainloader,valloader, model, 'project2_alexnet.pth', device, epoch=16)
 
     # TRAINING TRANSFORMER PRETRAIN
-    model = Network(
-        image_size=224,
-        patch_size=16,
-        num_layers=12,
-        num_heads=12,
-        hidden_dim=768,
-        mlp_dim=3072
-    )
-    model.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
-    fruit_model_runner(trainloader,valloader, model, 'project2_transformer_pre_trained2.pth', device, epoch=32)
+    # model = Network(
+    #     image_size=224,
+    #     patch_size=16,
+    #     num_layers=12,
+    #     num_heads=12,
+    #     hidden_dim=768,
+    #     mlp_dim=3072
+    # )
+    # model.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
+    # fruit_model_runner(trainloader,valloader, model, 'project2_transformer_pre_trained2.pth', device, epochs=32)
     
     # # TRAINING TRANSFORMER
     # model = Network(
