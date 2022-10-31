@@ -176,9 +176,8 @@ if __name__ == '__main__':
     training_conditions = {'learning_rates':[0.01, 0.005, 0.001, 0.0005, 0.0001],
                             'milestones':[None, 
                                         [2,4,8],
-                                        [4,6,8],
-                                        [4,8,12]],
-                            'gammas':[0.25,0.5,0.75,0.9]}
+                                        [4,6,8]],
+                            'gammas':[0.5,0.75,0.9]}
     
     training_results_loss = {}
     training_results_accuracy = {}
