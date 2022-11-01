@@ -91,9 +91,10 @@ def fruit_model_runner(trainloader, valloader, model, model_save_name, device, l
 
     print(model_save_name, " Done!")
     
+    if model_save_name != None: torch.save(model.state_dict(), model_save_name)
     return accuracy_list, loss_list
 
-    #torch.save(model.state_dict(), model_save_name)
+    
 
 if __name__ == '__main__':
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -173,42 +174,48 @@ if __name__ == '__main__':
     # fruit_model_runner(trainloader,valloader, model, 'project2_MLPMixer.pth', device, epoch=16, mixer=True)s
 
 
-    training_conditions = {'learning_rates':[0.01, 0.005, 0.001, 0.0005, 0.0001],
-                            'milestones':[None, 
-                                        [2,4,8],
-                                        [4,6,8]],
-                            'gammas':[0.5,0.75,0.9]}
+    # training_conditions = {'learning_rates':[0.01, 0.005, 0.001, 0.0005, 0.0001],
+    #                         'milestones':[None, 
+    #                                     [2,4,8],
+    #                                     [4,6,8]],
+    #                         'gammas':[0.5,0.75,0.9]}
     
-    training_results_loss = {}
-    training_results_accuracy = {}
-    for lr in training_conditions['learning_rates']:
-        for milestones in training_conditions['milestones']:
-            for gamma in training_conditions['gammas']:
+    # training_results_loss = {}
+    # training_results_accuracy = {}
+    # for lr in training_conditions['learning_rates']:
+    #     for milestones in training_conditions['milestones']:
+    #         for gamma in training_conditions['gammas']:
 
-                model = Network(image_size=224, patch_size=16, num_layers=12, num_heads=12, hidden_dim=768, mlp_dim=3072)
-                model.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
-                accuracy_list, loss_list = fruit_model_runner(trainloader, valloader, model, None, device, lr, milestones, gamma, epochs=16)
-                training_results_loss['ViT-LR'+str(lr)+'-MS'+str(milestones)+'-G'+str(gamma)] = loss_list
-                training_results_accuracy['ViT-LR'+str(lr)+'-MS'+str(milestones)+'-G'+str(gamma)] = accuracy_list
+    #             model = Network(image_size=224, patch_size=16, num_layers=12, num_heads=12, hidden_dim=768, mlp_dim=3072)
+    #             model.load_state_dict(torch.load('/project/MLFluids/model_v13.pth'))
+    #             accuracy_list, loss_list = fruit_model_runner(trainloader, valloader, model, None, device, lr, milestones, gamma, epochs=16)
+    #             training_results_loss['ViT-LR'+str(lr)+'-MS'+str(milestones)+'-G'+str(gamma)] = loss_list
+    #             training_results_accuracy['ViT-LR'+str(lr)+'-MS'+str(milestones)+'-G'+str(gamma)] = accuracy_list
                 
-                model = torchvision.models.resnet50(pretrained=True)
-                accuracy_list, loss_list = fruit_model_runner(trainloader, valloader, model, None, device, lr, milestones, gamma, epochs=16)
-                training_results_loss['ResNet-LR'+str(lr)+'-MS'+str(milestones)+'-G'+str(gamma)] = loss_list
-                training_results_accuracy['ResNet-LR'+str(lr)+'-MS'+str(milestones)+'-G'+str(gamma)] = accuracy_list
+    #             model = torchvision.models.resnet50(pretrained=True)
+    #             accuracy_list, loss_list = fruit_model_runner(trainloader, valloader, model, None, device, lr, milestones, gamma, epochs=16)
+    #             training_results_loss['ResNet-LR'+str(lr)+'-MS'+str(milestones)+'-G'+str(gamma)] = loss_list
+    #             training_results_accuracy['ResNet-LR'+str(lr)+'-MS'+str(milestones)+'-G'+str(gamma)] = accuracy_list
 
-                model = torchvision.models.alexnet(pretrained=True)
-                accuracy_list, loss_list = fruit_model_runner(trainloader, valloader, model, None, device, lr, milestones, gamma, epochs=16)
-                training_results_loss['AlexNet-LR'+str(lr)+'-MS'+str(milestones)+'-G'+str(gamma)] = loss_list
-                training_results_accuracy['AlexNet-LR'+str(lr)+'-MS'+str(milestones)+'-G'+str(gamma)] = accuracy_list
+    #             model = torchvision.models.alexnet(pretrained=True)
+    #             accuracy_list, loss_list = fruit_model_runner(trainloader, valloader, model, None, device, lr, milestones, gamma, epochs=16)
+    #             training_results_loss['AlexNet-LR'+str(lr)+'-MS'+str(milestones)+'-G'+str(gamma)] = loss_list
+    #             training_results_accuracy['AlexNet-LR'+str(lr)+'-MS'+str(milestones)+'-G'+str(gamma)] = accuracy_list
 
 
-    import csv 
-    with open('output_loss.csv', 'w') as output:
-        writer = csv.writer(output)
-        for key, value in training_results_loss.items():
-            writer.writerow([key, value])
+    # import csv 
+    # with open('output_loss.csv', 'w') as output:
+    #     writer = csv.writer(output)
+    #     for key, value in training_results_loss.items():
+    #         writer.writerow([key, value])
 
-    with open('output_accuracy.csv', 'w') as output:
-        writer = csv.writer(output)
-        for key, value in training_results_accuracy.items():
-            writer.writerow([key, value])
+    # with open('output_accuracy.csv', 'w') as output:
+    #     writer = csv.writer(output)
+    #     for key, value in training_results_accuracy.items():
+    #         writer.writerow([key, value])
+
+    # Most competetive Model
+    model = torchvision.models.resnet50(pretrained=False)
+    accuracy_list, loss_list = fruit_model_runner(trainloader, valloader, model, 'project2_resnet_final.pth', device, 0.0005, None, None, epochs=12)
+    print(accuracy_list)
+    print(loss_list)
