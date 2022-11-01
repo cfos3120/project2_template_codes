@@ -482,3 +482,8 @@ class WarmupCosineLrScheduler(_LRScheduler):
         elif self.warmup == 'exp':
             ratio = self.warmup_ratio ** (1. - alpha)
         return ratio
+
+## MOST COMPETETIVE MODEL - RESNET50
+#___________________________________________________________________________#
+
+
