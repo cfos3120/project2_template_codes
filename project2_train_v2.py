@@ -88,10 +88,11 @@ def fruit_model_runner(trainloader, valloader, model, model_save_name, device, l
         accuracy, loss = test(valloader, model, loss_fn, device)
         accuracy_list.append(accuracy)
         loss_list.append(loss)
+        if model_save_name != None: torch.save(model.state_dict(), model_save_name+'epoch_'+str(t+1)+'.pth')
 
     print(model_save_name, " Done!")
     
-    if model_save_name != None: torch.save(model.state_dict(), model_save_name)
+    
     return accuracy_list, loss_list
 
     
@@ -216,6 +217,6 @@ if __name__ == '__main__':
 
     # Most competetive Model
     model = torchvision.models.resnet50(pretrained=False)
-    accuracy_list, loss_list = fruit_model_runner(trainloader, valloader, model, 'project2_resnet_final.pth', device, 0.0005, None, None, epochs=12)
+    accuracy_list, loss_list = fruit_model_runner(trainloader, valloader, model, 'project2_resnet_final_v2', device, 0.001, [4,8,12], 0.5, epochs=16)
     print(accuracy_list)
     print(loss_list)
