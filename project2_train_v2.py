@@ -216,7 +216,7 @@ if __name__ == '__main__':
     #         writer.writerow([key, value])
 
     # Most competetive Model
-    model = torchvision.models.resnet50(pretrained=False)
+    model = torchvision.models.resnet50(pretrained=True)
     accuracy_list, loss_list = fruit_model_runner(trainloader, valloader, model, 'project2_resnet_final_v2', device, 0.001, [4,8,12], 0.5, epochs=16)
     print(accuracy_list)
     print(loss_list)
