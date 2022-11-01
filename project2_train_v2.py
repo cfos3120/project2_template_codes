@@ -234,6 +234,7 @@ if __name__ == '__main__':
         mlp_dim=3072
     )
     model.load_state_dict(torch.load('project2_transformer_pre_trained.pth'))
+    model.to(device)
     loss_fn = nn.CrossEntropyLoss()
     test(valloader, model, loss_fn, device)
     end = time.process_time()
@@ -242,6 +243,7 @@ if __name__ == '__main__':
     start = time.process_time()
     model = torchvision.models.alexnet(pretrained=True)
     model.load_state_dict(torch.load('project2_alexnet_pre_train.pth'))
+    model.to(device)
     loss_fn = nn.CrossEntropyLoss()
     test(valloader, model, loss_fn, device)
     end = time.process_time()
@@ -250,6 +252,7 @@ if __name__ == '__main__':
     start = time.process_time()
     model = torchvision.models.resnet50(pretrained=True)
     model.load_state_dict(torch.load('project2_resnet_pre_train.pth'))
+    model.to(device)
     loss_fn = nn.CrossEntropyLoss()
     test(valloader, model, loss_fn, device)
     end = time.process_time()
