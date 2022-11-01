@@ -216,7 +216,20 @@ if __name__ == '__main__':
     #         writer.writerow([key, value])
 
     # Most competetive Model
-    model = torchvision.models.resnet50(pretrained=True)
-    accuracy_list, loss_list = fruit_model_runner(trainloader, valloader, model, 'project2_resnet_final_v2', device, 0.001, [4,8,12], 0.5, epochs=16)
-    print(accuracy_list)
-    print(loss_list)
+    # model = torchvision.models.resnet50(pretrained=True)
+    # accuracy_list, loss_list = fruit_model_runner(trainloader, valloader, model, 'project2_resnet_final_v2', device, 0.001, [4,8,12], 0.5, epochs=16)
+    # print(accuracy_list)
+    # print(loss_list)
+
+    # Inference testing v1 
+    model = Network(
+        image_size=224,
+        patch_size=16,
+        num_layers=12,
+        num_heads=12,
+        hidden_dim=768,
+        mlp_dim=3072
+    )
+    model.load_state_dict(torch.load('/project2_transformer_pre_trained.pth'))
+    loss_fn = nn.CrossEntropyLoss()
+    test(valloader, model, loss_fn, device)
