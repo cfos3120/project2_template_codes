@@ -222,6 +222,9 @@ if __name__ == '__main__':
     # print(loss_list)
 
     # Inference testing v1 
+
+    import time 
+    start = time.process_time()
     model = Network(
         image_size=224,
         patch_size=16,
@@ -230,6 +233,24 @@ if __name__ == '__main__':
         hidden_dim=768,
         mlp_dim=3072
     )
-    model.load_state_dict(torch.load('/project2_transformer_pre_trained.pth'))
+    model.load_state_dict(torch.load('project2_transformer_pre_trained.pth'))
     loss_fn = nn.CrossEntropyLoss()
     test(valloader, model, loss_fn, device)
+    end = time.process_time()
+    print('ViT: ', end-start)
+
+    start = time.process_time()
+    model = torchvision.models.alexnet(pretrained=True)
+    model.load_state_dict(torch.load('project2_alexnet_pre_train.pth'))
+    loss_fn = nn.CrossEntropyLoss()
+    test(valloader, model, loss_fn, device)
+    end = time.process_time()
+    print('AlexNet: ', end-start)
+
+    start = time.process_time()
+    model = torchvision.models.resnet50(pretrained=True)
+    model.load_state_dict(torch.load('project2_resnet_pre_train.pth'))
+    loss_fn = nn.CrossEntropyLoss()
+    test(valloader, model, loss_fn, device)
+    end = time.process_time()
+    print('ResNet: ', end-start)
