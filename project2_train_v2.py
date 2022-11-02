@@ -223,37 +223,43 @@ if __name__ == '__main__':
 
     # Inference testing v1 
 
-    import time 
-    start = time.process_time()
-    model = Network(
-        image_size=224,
-        patch_size=16,
-        num_layers=12,
-        num_heads=12,
-        hidden_dim=768,
-        mlp_dim=3072
-    )
-    model.load_state_dict(torch.load('project2_transformer_pre_trained.pth'))
-    model.to(device)
-    loss_fn = nn.CrossEntropyLoss()
-    test(valloader, model, loss_fn, device)
-    end = time.process_time()
-    print('ViT: ', end-start)
+    # import time 
+    # start = time.process_time()
+    # model = Network_vit(
+    #     image_size=224,
+    #     patch_size=16,
+    #     num_layers=12,
+    #     num_heads=12,
+    #     hidden_dim=768,
+    #     mlp_dim=3072
+    # )
+    # model.load_state_dict(torch.load('project2_transformer_pre_trained.pth'))
+    # model.to(device)
+    # loss_fn = nn.CrossEntropyLoss()
+    # test(valloader, model, loss_fn, device)
+    # end = time.process_time()
+    # print('ViT: ', end-start)
 
-    start = time.process_time()
-    model = torchvision.models.alexnet(pretrained=True)
-    model.load_state_dict(torch.load('project2_alexnet_pre_train.pth'))
-    model.to(device)
-    loss_fn = nn.CrossEntropyLoss()
-    test(valloader, model, loss_fn, device)
-    end = time.process_time()
-    print('AlexNet: ', end-start)
+    # start = time.process_time()
+    # model = torchvision.models.alexnet(pretrained=True)
+    # model.load_state_dict(torch.load('project2_alexnet_pre_train.pth'))
+    # model.to(device)
+    # loss_fn = nn.CrossEntropyLoss()
+    # test(valloader, model, loss_fn, device)
+    # end = time.process_time()
+    # print('AlexNet: ', end-start)
 
-    start = time.process_time()
-    model = torchvision.models.resnet50(pretrained=True)
+    # start = time.process_time()
+    # model = torchvision.models.resnet50(pretrained=True)
+    # model.load_state_dict(torch.load('project2_resnet_pre_train.pth'))
+    # model.to(device)
+    # loss_fn = nn.CrossEntropyLoss()
+    # test(valloader, model, loss_fn, device)
+    # end = time.process_time()
+    # print('ResNet: ', end-start)
+
+    model = Network()
     model.load_state_dict(torch.load('project2_resnet_pre_train.pth'))
     model.to(device)
     loss_fn = nn.CrossEntropyLoss()
     test(valloader, model, loss_fn, device)
-    end = time.process_time()
-    print('ResNet: ', end-start)
